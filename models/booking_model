@@ -1,0 +1,43 @@
+from database.db import get_connection
+
+def create_booking(data):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO bookings (
+        transaction_id,
+        passenger_name,
+        age,
+        mobile,
+        email,
+        dob,
+        gender,
+        aadhar,
+        source,
+        destination,
+        travel_date,
+        travel_time,
+        boat_name,
+        seats,
+        total_price,
+        payment_status,
+        booking_status,
+        booking_timestamp
+    )
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """, data)
+
+    conn.commit()
+    conn.close()
+
+
+def get_all_bookings():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM bookings")
+    data = cursor.fetchall()
+
+    conn.close()
+    return data
