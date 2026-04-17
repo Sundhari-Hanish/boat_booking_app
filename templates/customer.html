@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boat Booking</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #dbeafe, #f0f9ff);
+            padding: 20px;
+        }
+
+        .container {
+            width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1e3a8a;
+        }
+
+        h3 {
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .section {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+
+        /* Fixed User Type Alignment */
+        .user-type-toggle {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        .user-type-toggle input[type="radio"] {
+            width: auto; /* Overrides the 100% width for general inputs */
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .user-type-toggle label {
+            cursor: pointer;
+            font-weight: 400;
+            margin-right: 10px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .row div {
+            flex: 1;
+        }
+
+        .price-box {
+            background: #e0f2fe;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #1e40af;
+        }
+
+        .success-box {
+            background: #dcfce7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 6px solid #16a34a;
+        }
+
+        .success-box p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>⛵ Boat Booking System</h2>
+
+    {% if message %}
+    <div class="success-box">
+        <h3>🎉 Booking Confirmed</h3>
+        <p><b>Transaction ID:</b> {{ message.txn_id }}</p>
+        <p><b>Register ID:</b> {{ message.reg_id }}</p>
+        <p><b>Name:</b> {{ message.name }}</p>
+        <p><b>Route:</b> {{ message.source }} → {{ message.destination }}</p>
+        <p><b>Boat:</b> {{ message.boat }}</p>
+        <p><b>Seats:</b> {{ message.seats }}</p>
+        <p><b>Total:</b> ₹{{ message.price }}</p>
+    </div>
+    {% endif %}
+
+    <form method="POST">
+
+        <div class="section">
+            <h3>User Type</h3>
+            <div class="user-type-toggle">
+                <input type="radio" id="newUser" name="user_type" value="new" required>
+                <label for="newUser">New User</label>
+
+                <input type="radio" id="existingUser" name="user_type" value="existing">
+                <label for="existingUser">Existing User</label>
+            </div>
+            
+            <input type="text" name="register_id" placeholder="Enter Register ID (if existing)">
+            <button type="submit" name="action" value="fetch">
+             Fetch Details
+            </button>
+        </div>
+
+        <div class="section">
+            <h3>Passenger Details</h3>
+
+            <div class="row">
+                <div>
+                    <label>Name</label>
+                    <input type="text" name="name" value="{{ user.passenger_name if user }}">
+                </div>
+
+                <div>
+                    <label>Age</label>
+                    <input type="number" name="age" value="{{ user.age if user }}">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Mobile</label>
+                    <input type="text" name="mobile" value="{{ user.mobile if user }}">
+                </div>
+
+                <div>
+                    <label>Email</label>
+                    <input type="email" name="email" value="{{ user.email if user }}">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>DOB</label>
+                    <input type="date" name="dob" value="{{ user.dob if user }}">
+                </div>
+
+                <div>
+                    <label>Gender</label>
+                    <select name="gender">
+                        <option value="">Select</option>
+                        <option {% if user and user.gender=='Male' %}selected{% endif %}>Male</option>
+                        <option {% if user and user.gender=='Female' %}selected{% endif %}>Female</option>
+                        <option {% if user and user.gender=='Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <label>Aadhar</label>
+            <input type="text" name="aadhar" value="{{ user.aadhar if user }}">
+        </div>
+
+        <div class="section">
+            <h3>Travel Details</h3>
+
+            <div class="row">
+                <div>
+                    <label>Source</label>
+                    <select name="source">
+                        {% for r in routes %}
+                        <option value="{{ r[0] }}">{{ r[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label>Destination</label>
+                    <select name="destination">
+                        {% for r in routes %}
+                        <option value="{{ r[1] }}">{{ r[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Boat</label>
+                    <select name="boat">
+                        {% for b in boats %}
+                        <option value="{{ b }}">{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label>Seats</label>
+                    <input type="number" name="seats" min="1">
+                </div>
+            </div>
+
+            <div class="price-box">
+                Price per seat: ₹{{ price }}
+            </div>
+        </div>
+
+        <button type="submit" name="action" value="book">
+            🎟 Confirm Booking
+        </button>
+
+    </form>
+</div>
+
+</body>
+</html>
