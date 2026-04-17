@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+
+        .container {
+            width: 600px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #1e3a8a;
+        }
+
+        h3 {
+            margin-top: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Ensures padding doesn't break layout */
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #1e7e34;
+        }
+        .price-box {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+            border: 1px solid #ffeeba;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #fdfdfd;
+            border: 1px solid #efefef;
+            border-radius: 8px;
+        }
+        .message-box {
+            background: #e0f2fe;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+            border-left: 5px solid #3b82f6;
+        }
+
+        .login-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>🔐 Admin Panel</h2>
+
+    {% if message %}
+    <div class="message-box">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if not logged_in %}
+    <div class="login-box">
+        <form method="POST">
+            <label>Admin Password</label>
+            <input type="password" name="password" placeholder="Enter Admin Password" required>
+
+            <button type="submit" name="action" value="login">
+                Login to Dashboard
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if logged_in %}
+
+<!-- add boat -->
+<form method="POST">
+    <div class="section">
+        <h3>🚤 Add Boat</h3>
+        <input type="text" name="boat_name" placeholder="Boat Name" required>
+        <input type="number" name="capacity" placeholder="Capacity" required>
+        <button type="submit" name="action" value="add_boat">
+            Confirm Add Boat
+        </button>
+    </div>
+</form>
+
+<!-- Add route -->
+
+<form method="POST">
+    <div class="section">
+        <h3>🗺 Add Route</h3>
+        <input type="text" name="source" placeholder="Source" required>
+        <input type="text" name="destination" placeholder="Destination" required>
+        <button type="submit" name="action" value="add_route">
+            Confirm Add Route
+        </button>
+    </div>
+</form>
+
+<!-- Update Price -->
+
+<form method="POST">
+    <div class="section">
+        <h3>💰 Update Price</h3>
+        <input type="number" name="price" placeholder="New Price per Seat" required>
+        <button type="submit" name="action" value="update_price">
+            Update Price
+        </button>
+    </div>
+</form>
+<div class="price-box">
+    Current Price: ₹{{ price }}
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
